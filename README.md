@@ -1,6 +1,10 @@
-## Deere Project 4 Starter Code
+## Project 4 Backend Trivia Application
 
-This app serves JSON data only. There are no views. You'll build a React app to communicate with this Express app. Since there are no views, you'll want to use Postman to test that your endpoints are working before writing the React code.
+This app serves JSON data only. It is the backend application that will be used to view, add, update or delete data from the triva database.
+
+The React app will interface between the user and this back end application.
+
+Since there are no views, you'll want to use Postman to test that your endpoints are working before writing the React code.
 
 Note - this app has no views and each endpoint is prefaced with `/api`.
 
