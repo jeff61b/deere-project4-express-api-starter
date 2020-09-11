@@ -15,7 +15,7 @@ router.get("/new", (req, res) => {
   });
 });
 
-// index route   THIS ROUTE WORKS!
+// index route - get all trivia questions   THIS ROUTE WORKS!
 router.get("/", async (req, res) => {
   let triviaQuestions = await TriviaModel.findAll({
     order: ["id"],
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
   res.json({ newQuestion });
 });
 
-// SHOW ROUTE - GET ONE Trivia Question    THIS ROUTE WORKS!
+// SHOW ROUTE - Get one specific Trivia Question    THIS ROUTE WORKS!
 router.get("/:id", async (req, res) => {
   let foundQuestion = await TriviaModel.findByPk(req.params.id);
   res.json({ trivia: foundQuestion });
@@ -62,23 +62,34 @@ router.get("/:id/edit", async (req, res) => {
 //     res.json({ trivia: foundQuestion, allCategory });
 // });
 
-// Perform the actual update of the data in the array
-router.put("/:id", (req, res) => {
-  console.log(req.body);
-
-  TriviaModel.update(req.body, {
+// Update a record and return the trivia question and category. THIS ROUTE WORKS
+router.put("/:id", async (req, res) => {
+  let updatedTrivia = await TriviaModel.update(req.body, {
     where: { id: req.params.id },
     returning: true,
-  }).then((updatedTrivia) => {
-    console.log("Trivia update");
-    //  Category.findByPk(req.body.categoryId).then((foundCategory) => {
-    //    TriviaModel.findByPk(req.params.id).then((foundQuestion) => {
-    //      foundQuestion.addCategory(foundCategory);
-    res.redirect("/trivia");
   });
-  //  });
-  //});
+  let triviaQuestion = await TriviaModel.findByPk(req.params.id, {
+    include: Category,
+  });
+  res.json({ triviaQuestion });
 });
+
+// router.put("/:id", (req, res) => {
+//     console.log(req.body);
+
+//     TriviaModel.update(req.body, {
+//         where: { id: req.params.id },
+//         returning: true,
+//     }).then((updatedTrivia) => {
+//         console.log("Trivia update");
+//         //  Category.findByPk(req.body.categoryId).then((foundCategory) => {
+//         //    TriviaModel.findByPk(req.params.id).then((foundQuestion) => {
+//         //      foundQuestion.addCategory(foundCategory);
+//         res.redirect("/trivia");
+//     });
+//     //  });
+//     //});
+// });
 
 // Delete a trivia question  THIS ROUTE WORKS!
 router.delete("/:id", async (req, res) => {
