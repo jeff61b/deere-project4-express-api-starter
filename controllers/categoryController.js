@@ -4,16 +4,23 @@ const router = express.Router();
 const CategoryModel = require("../models").Category;
 const TriviaModel = require("../models").TriviaQuestions;
 
-// index route
-router.get("/", (req, res) => {
-  CategoryModel.findAll({
+// index route - Get all categories   THIS ROUTE WORKS
+router.get("/", async (req, res) => {
+  let categoryAll = await CategoryModel.findAll({
     order: ["id"],
-  }).then((categoryAll) => {
-    res.render("categories/index.ejs", {
-      category: categoryAll,
-    });
   });
+  res.json({ categoryAll });
 });
+
+// router.get("/", (req, res) => {
+//   CategoryModel.findAll({
+//     order: ["id"],
+//   }).then((categoryAll) => {
+//     res.render("categories/index.ejs", {
+//       category: categoryAll,
+//     });
+//   });
+// });
 
 // New route - send empty form
 router.get("/new", (req, res) => {
