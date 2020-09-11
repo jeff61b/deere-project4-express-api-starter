@@ -23,50 +23,42 @@ router.get("/", async (req, res) => {
 // });
 
 // New route - send empty form
-router.get("/new", (req, res) => {
-  res.render("categories/new.ejs");
+// router.get("/new", (req, res) => {
+//   res.render("categories/new.ejs");
+// });
+
+// Add New Category   THIS ROUTE WORKS
+router.post("/", async (req, res) => {
+  let newCategory = await CategoryModel.create(req.body);
+  res.json({ newCategory });
 });
 
-// Add New Category
-router.post("/", (req, res) => {
-  CategoryModel.create(req.body).then((newCategory) => {
-    console.log("New Category " + newCategory);
-    console.log("req.body" + req.body);
-    res.redirect("/categories");
-  });
+// SHOW ROUTE - GET ONE Category    THIS ROUTE WORKS
+router.get("/:id", async (req, res) => {
+  let foundCategory = await CategoryModel.findByPk(req.params.id);
+  res.json({ category: foundCategory });
 });
 
-// SHOW ROUTE - GET ONE Category
-router.get("/:id", function (req, res) {
-  res.redirect("/categories");
-  //  res.render("categories");
+// Edit. Get category to edit.  THIS ROUTE WORKS
+router.get("/:id/edit", async (req, res) => {
+  let foundCategory = await CategoryModel.findByPk(req.params.id);
+  res.json({ category: foundCategory });
 });
 
-// Edit
-router.get("/:id/edit", function (req, res) {
-  CategoryModel.findByPk(req.params.id).then((foundCategory) => {
-    res.render("edit.ejs", {
-      category: foundCategory,
-    });
-  });
-});
-
-// Perform the actual UPDATE of the data in the table
-router.put("/:id", (req, res) => {
-  CategoryModel.update(req.body, {
+// Perform the actual UPDATE of the category.   THIS ROUTE WORKS
+router.put("/:id", async (req, res) => {
+  let updatedCategory = await CategoryModel.update(req.body, {
     where: { id: req.params.id },
     returning: true,
-  }).then((category) => {
-    console.log("Update record");
-    console.log(req.body);
-    res.redirect("/categories");
   });
+  let foundCategory = await CategoryModel.findByPk(req.params.id);
+  res.json({ category: foundCategory });
 });
 
-router.delete("/:id", (req, res) => {
-  CategoryModel.destroy({ where: { id: req.params.id } }).then(() => {
-    console.log("delete route" + req.params.id);
-    res.redirect("/categories");
+//Delete a category.
+router.delete("/:id", async (req, res) => {
+  await CategoryModel.destroy({
+    where: { id: req.params.id },
   });
 });
 
