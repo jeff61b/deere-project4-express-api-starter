@@ -1,4 +1,5 @@
 const express = require("express");
+const { post } = require("./usersController");
 const category = require("../models/category");
 const router = express.Router();
 const User = require("../models").User;
@@ -14,41 +15,36 @@ router.get("/new", (req, res) => {
   });
 });
 
-// index route
-router.get("/", (req, res) => {
-  TriviaModel.findAll({
+// index route   THIS ROUTE WORKS!
+router.get("/", async (req, res) => {
+  let triviaQuestions = await TriviaModel.findAll({
     order: ["id"],
-  }).then((triviaAll) => {
-    res.render("index.ejs", {
-      trivia: triviaAll,
-    });
   });
+  res.json({ triviaQuestions });
 });
 
-// Add New Trivia Question
-router.post("/", (req, res) => {
-  TriviaModel.create(req.body).then((newQuestion) => {
-    console.log("new" + newQuestion);
-    res.redirect("/trivia");
-  });
+// Add New Trivia Question  THIS ROUTE WORKS!
+router.post("/", async (req, res) => {
+  let newQuestion = await TriviaModel.create(req.body);
+  res.json({ newQuestion });
 });
 
-// SHOW ROUTE - GET ONE Trivia Question
-router.get("/:id", function (req, res) {
-  TriviaModel.findByPk(req.params.id).then((foundQuestion) => {
-    Category.findByPk(foundQuestion.categoryId).then((allCategories) => {
-      //console.log(allCategories);
-      console.log("New show route");
-      //console.log(foundQuestion);
-      console.log(foundQuestion.categoryId);
-      console.log(allCategories.name);
-      res.render("show.ejs", {
-        trivia: foundQuestion,
-        categories: allCategories,
-      });
-    });
-  });
+// SHOW ROUTE - GET ONE Trivia Question    THIS ROUTE WORKS!
+router.get("/:id", async (req, res) => {
+  let foundQuestion = await TriviaModel.findByPk(req.params.id);
+  res.json({ trivia: foundQuestion });
 });
+
+// router.get("/:id", function (req, res) {
+//     TriviaModel.findByPk(req.params.id).then((foundQuestion) => {
+//         Category.findByPk(foundQuestion.categoryId).then((allCategories) => {
+//             res.render("show.ejs", {
+//                 trivia: foundQuestion,
+//                 categories: allCategories,
+//             });
+//         });
+//     });
+// });
 
 // Edit
 router.get("/:id/edit", function (req, res) {
@@ -81,10 +77,17 @@ router.put("/:id", (req, res) => {
   //});
 });
 
-router.delete("/:id", (req, res) => {
-  TriviaModel.destroy({ where: { id: req.params.id } }).then(() => {
-    res.redirect("/trivia");
+// Delete a trivia question  THIS ROUTE WORKS!
+router.delete("/:id", async (req, res) => {
+  await TriviaModel.destroy({
+    where: { id: req.params.id },
   });
 });
+
+// router.delete("/:id", (req, res) => {
+//     TriviaModel.destroy({ where: { id: req.params.id } }).then(() => {
+//         res.redirect("/trivia");
+//     });
+// });
 
 module.exports = router;

@@ -30,11 +30,12 @@ app.use(methodOverride("_method"));
 
 // HOMEPAGE
 app.get("/", (req, res) => {
-  res.json({ message: "express api app is working" });
+  res.json({ message: "Good morning. Express api trivia app is working" });
 });
 
 app.use("/api/auth", require("./controllers/authController.js"));
 app.use("/api/users", require("./controllers/usersController.js"));
+app.use("/api/trivia", require("./controllers/triviaController.js"));
 
 app.listen(process.env.PORT, () => {
   console.log("Nodemon listening");
