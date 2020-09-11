@@ -46,18 +46,21 @@ router.get("/:id", async (req, res) => {
 //     });
 // });
 
-// Edit
-router.get("/:id/edit", function (req, res) {
-  TriviaModel.findByPk(req.params.id).then((foundQuestion) => {
-    Category.findAll().then((allCategories) => {
-      console.log(allCategories);
-      res.render("edit.ejs", {
-        trivia: foundQuestion,
-        categories: allCategories,
-      });
-    });
-  });
+// Edit Get a trvia question and just its category.  THIS ROUTE WORKS
+router.get("/:id/edit", async (req, res) => {
+  let foundQuestion = await TriviaModel.findByPk(req.params.id);
+  let allCategory = await Category.findByPk(foundQuestion.categoryId);
+  res.json({ trivia: foundQuestion, allCategory });
 });
+
+// EDIT  Get a trivia question and all categories.   THIS ROUTE WORKS
+// router.get("/:id/edit", async (req, res) => {
+//     let foundQuestion = await TriviaModel.findByPk(req.params.id);
+//     let allCategory = await Category.findAll({
+//         order: ["id"],
+//     });
+//     res.json({ trivia: foundQuestion, allCategory });
+// });
 
 // Perform the actual update of the data in the array
 router.put("/:id", (req, res) => {
