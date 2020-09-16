@@ -9,23 +9,9 @@ router.get("/", async (req, res) => {
   let categoryAll = await CategoryModel.findAll({
     order: ["id"],
   });
+  console.log("get all categories");
   res.json({ categoryAll });
 });
-
-// router.get("/", (req, res) => {
-//   CategoryModel.findAll({
-//     order: ["id"],
-//   }).then((categoryAll) => {
-//     res.render("categories/index.ejs", {
-//       category: categoryAll,
-//     });
-//   });
-// });
-
-// New route - send empty form
-// router.get("/new", (req, res) => {
-//   res.render("categories/new.ejs");
-// });
 
 // Add New Category   THIS ROUTE WORKS
 router.post("/", async (req, res) => {
@@ -55,7 +41,7 @@ router.put("/:id", async (req, res) => {
   res.json({ category: foundCategory });
 });
 
-//Delete a category.
+//Delete a category.     THIS ROUTE WORKS
 router.delete("/:id", async (req, res) => {
   await CategoryModel.destroy({
     where: { id: req.params.id },
